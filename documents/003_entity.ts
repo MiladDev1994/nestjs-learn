@@ -14,8 +14,8 @@
 // و باید به سرویس هم اضافه بشه
     // export class SongsService {
         // constructor(
-        //     @InjectRepository(SongEntity)
-        //     private songsRepository: Repository<SongEntity>
+        //     @InjectRepository(SongEntity) // برای ارتباط با انتیتی
+        //     private songsRepository: Repository<SongEntity> // برای ارتباط با انتیتی
         // ){}
     // }
 
