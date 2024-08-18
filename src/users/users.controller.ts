@@ -33,15 +33,15 @@ export class UsersController {
         return this.userService.paginate(options)
     }
 
-    @Get(":id")
-    findOne(
-        @Param(
-            "id", 
-            new ParseIntPipe({errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE})
-        ) id: number
-    ): Promise<UserEntity> {
-        return this.userService.findOne(id)
-    }
+    // @Get(":id")
+    // findOne(
+    //     @Param(
+    //         "id", 
+    //         new ParseIntPipe({errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE})
+    //     ) id: number
+    // ): Promise<UserEntity> {
+    //     return this.userService.findOne(id)
+    // }
 
     @Put(":id")
     update(

@@ -1,10 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create_user_dto';
 import { UserEntity } from './users.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import { UpdateUserDto } from './dto/update_user_dto';
 import { IPaginationOptions, paginate, Pagination } from 'nestjs-typeorm-paginate';
+import * as bcrypt from "bcryptjs"
+import { LoginDTO } from 'src/auth/dto/login.dto';
 
 @Injectable()
 export class UsersService {
@@ -13,25 +15,25 @@ export class UsersService {
         @InjectRepository(UserEntity)
         private usersRepository: Repository<UserEntity>
     ) {}
-    
-    create(userDTO: CreateUserDto): Promise<UserEntity> {
-        const user = new UserEntity()
-        user.firstName = userDTO.firstName;
-        user.lastName = userDTO.lastName;
-        user.email = userDTO.email;
-        user.password = userDTO.password;
 
-        return this.usersRepository.save(user)
+    async create(userDTO: CreateUserDto): Promise<UserEntity> {
+        const salt = await bcrypt.genSalt()
+        userDTO.password = await bcrypt.hash(userDTO.password, salt)
+        const user = await this.usersRepository.save(userDTO)
+        delete user.password
+        return user
+    }
+
+    async findOne(data: LoginDTO): Promise<UserEntity> {
+        const user = await this.usersRepository.findOneBy({email: data.email})
+        if (!user) throw new UnauthorizedException("user not found")
+        return user
     }
 
     paginate(option: IPaginationOptions): Promise<Pagination<UserEntity>> {
         const queryBuilder = this.usersRepository.createQueryBuilder("c")
         queryBuilder.orderBy("c.id", "DESC")
         return paginate<UserEntity>(queryBuilder, option)
-    }
-
-    findOne(id: number) {
-        return this.usersRepository.findOneBy({ id })
     }
 
     update(id: number, userDTO: UpdateUserDto): Promise<UpdateResult> {
