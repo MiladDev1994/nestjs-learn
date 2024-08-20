@@ -7,6 +7,8 @@ import * as bcrypt from "bcryptjs"
 import { UsersService } from 'src/users/users.service';
 import { LoginDTO } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
+import { ArtistsService } from 'src/artists/artists.service';
+import { payloadTypes } from './types';
 
 @Injectable()
 export class AuthService {
@@ -14,7 +16,8 @@ export class AuthService {
         @InjectRepository(UserEntity)
         private userRepository: Repository<UserEntity>,
         private userService: UsersService,
-        private jwtService: JwtService
+        private jwtService: JwtService,
+        private artistService: ArtistsService
     ) {}
 
     async login(loginDTO: LoginDTO): Promise<{ accessToken: string }> {
@@ -22,7 +25,9 @@ export class AuthService {
         const passwordMatched = await bcrypt.compare(loginDTO.password, user.password)
         if (passwordMatched) {
             delete user.password;
-            const payload = {email: user.email, sub: user.id}
+            const payload: payloadTypes = {email: user.email, userId: user.id}
+            const artist = await this.artistService.findArtList(user.id)
+            if (artist) payload.artistId = artist.id
             return {accessToken: this.jwtService.sign(payload)}
         } else throw new UnauthorizedException("password dose not match")
     }
