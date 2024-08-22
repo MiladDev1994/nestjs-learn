@@ -1,0 +1,165 @@
+// برای پیاده کردن سیستم احراز حویت و اعتبار سنجی با استفاده از otp از از این ابزارها استفاده میکنیم
+    // speakeasy
+    // @types/speakeasy
+
+// تو این بخش میخوایم با استفاده از سیستم رمز یکبار مصرف گوگل معتبر بودن کاربر رو بررسی کنیم
+// اما نمیشه از این ابزار استفاده کرد
+// فکر کنم دسترسیش تو ایران بسته باشه
+// فقط کدهارو مینویسم و توضیح میدم
+
+
+// باید دو ستون به تیبل یوزر اضافه کنیم. به همین دلیل این کد رو به انتیتی یوزر اضافه میکنیم
+    // @Column({ nullable: true, type: "text"})
+    // twoFASecrete: string;
+
+    // @Column({ default: false, type: "boolean"})
+    // enable2FA: boolean;
+
+
+// ابتدا سرویس های مربوط یه یوزر
+    // async findById(id: number): Promise<UserEntity> {
+    //     return this.usersRepository.findOneBy({ id })
+    // }
+
+    // async updateSecreteKey(userId, secret: string): Promise<UpdateResult> {
+    //     return this.usersRepository.update(
+    //         {id: userId},
+    //         {
+    //             twoFASecrete: secret,
+    //             enable2FA: true
+    //         }
+    //     )
+    // }
+
+// یه DTO هم برای اعتبار سنجی توکن ایجاد میکنیم. یعنی یه فایل به اسن validate-token.dto.ts برای auth منویسیم
+    // export class ValidateTokenDTO {
+    //     @IsNotEmpty()
+    //     @IsString()
+    //     token;
+    // }
+
+
+// قدم بعدی اضافه کردن سه روت جدید به پروژه هستش
+// اولی برای ایجاد کردن سکرت کی و دومی برای اعتبار سنجی otp ارسال شده و سومی غیر فعال کردن سکرت کی
+
+    // کنترلر اولی
+        // @Get("enable-2fa")
+        // @UseGuards(JwtAuthGuard)
+        // enable2FA(
+        //     @Request()
+        //     request
+        // ): Promise<Enable2FAType> {
+        //     // console.log(request);
+        //     return this.authService.enable2FA(request.user.userId)
+        // }
+
+    // سرویس اولی
+        // async enable2FA(userId: number): Promise<Enable2FAType> {
+        //     const user = await this.userService.findById(userId)
+        //     if (user.enable2FA) {
+        //         return {secrete: user.twoFASecrete};
+        //     }
+        //     const secrete = speakeasy.generateSecret()
+        //     user.twoFASecrete = secrete.base32;
+        //     await this.userService.updateSecreteKey(user.id, user.twoFASecrete)
+        //     return {secrete: user.twoFASecrete};
+        // }
+
+
+
+
+    // کنترلر دومی
+        // @Post("validate-2fa")
+        // @UseGuards(JwtAuthGuard)
+        // validate2FA(
+        //     @Request()
+        //     request,
+        //     @Body()
+        //     validateTokenDTO: ValidateTokenDTO
+        // ): Promise<{ verified: boolean }> {
+        //     return this.authService.validate2FAToken(
+        //         request.user.userId,
+        //         validateTokenDTO.token
+        //     )
+        // }
+
+
+    // سرویس دومی
+        // async validate2FAToken(userId: number, token: string): Promise<{ verified: boolean }> {
+        //     try {
+        //         const user = await this.userService.findById(userId)
+
+        //         const verified = speakeasy.totp.verify({
+        //             secret: user.twoFASecrete,
+        //             token,
+        //             encoding: "base32"
+        //         })
+
+        //         if (verified) {
+        //             return {verified: true}
+        //         } else {
+        //             return {verified: false}
+        //         }
+        //     } catch (error) {
+        //         throw new UnauthorizedException("error verified token")
+        //     }
+        // }
+
+
+
+
+    // کنترلر سومی
+        // @Get("disable-2fa")
+        // @UseGuards(JwtAuthGuard)
+        // disable2FA(
+        //     @Request()
+        //     request
+        // ): Promise<UpdateResult> {
+        //     return this.authService.disable2FA(request.user.userId)
+        // }
+
+
+    // در سرویس auth
+        // async disable2FA(userId: number): Promise<UpdateResult> {
+        //     return this.userService.disable2FA(userId)
+        // }
+
+
+    // در سرویس یوزر
+        // async disable2FA(userId: number): Promise<UpdateResult> {
+        //     return this.usersRepository.update(
+        //         { id: userId},
+        //         {
+        //             enable2FA: false
+        //         }
+        //     )
+        // }
+
+
+    
+
+
+
+
+
+    // و برای مورد آخر باید بعد از لاگین به کار بر بگیم که otp رو اریال کنه
+    // برای اینکار کافیه در قسمت لاگین یه تغییراتن جزئی بدیم
+        // async login(loginDTO: LoginDTO): Promise<{ accessToken: string } | {validate2FA: string, message: string}> {
+        //     const user = await this.userService.findOne(loginDTO)
+        //     const passwordMatched = await bcrypt.compare(loginDTO.password, user.password)
+        //     if (passwordMatched) {
+        //         delete user.password;
+        //         const payload: payloadTypes = {email: user.email, userId: user.id}
+                    // اینجا
+        //         if (user.enable2FA && user.twoFASecrete) {
+        //             return {
+        //                 validate2FA: "http://localhost:3000/auth/validate-2fa",
+        //                 message: "please enter otp"
+        //             }
+        //         }
+        //         const artist = await this.artistService.findArtList(user.id)
+        //         if (artist) payload.artistId = artist.id
+        //         return {accessToken: this.jwtService.sign(payload)}
+        //     } else throw new UnauthorizedException("password dose not match")
+        // }
+

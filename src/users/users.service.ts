@@ -43,4 +43,28 @@ export class UsersService {
     delete(id: number): Promise<DeleteResult> {
         return this.usersRepository.delete(id)
     }
+
+    async findById(id: number): Promise<UserEntity> {
+        return this.usersRepository.findOneBy({ id })
+    }
+
+    async updateSecreteKey(userId, secret: string): Promise<UpdateResult> {
+        return this.usersRepository.update(
+            {id: userId},
+            {
+                twoFASecrete: secret,
+                enable2FA: true
+            }
+        )
+    }
+
+    async disable2FA(userId: number): Promise<UpdateResult> {
+        return this.usersRepository.update(
+            { id: userId},
+            {
+                enable2FA: false,
+                twoFASecrete: null
+            }
+        )
+    }
 }
