@@ -14,6 +14,7 @@ import { ArtistEntity } from './artists/artists.entity';
 import { AuthModule } from './auth/auth.module';
 import { dataSourceOption } from 'db/data-source';
 import { PlaylistModule } from './playlists/playlists.module';
+import { SeedModule } from './seed/seed.module';
 
 @Module({
   imports: [
@@ -22,7 +23,8 @@ import { PlaylistModule } from './playlists/playlists.module';
     ArtistsModule,
     UsersModule,
     AuthModule,
-    PlaylistModule
+    PlaylistModule,
+    SeedModule
   ],
   controllers: [AppController],
   providers: [AppService],
