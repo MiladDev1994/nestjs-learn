@@ -12,19 +12,11 @@ import { UsersModule } from './users/users.module';
 import { UserEntity } from './users/users.entity';
 import { ArtistEntity } from './artists/artists.entity';
 import { AuthModule } from './auth/auth.module';
+import { dataSourceOption } from 'db/data-source';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: "postgres",
-      host: "localhost",
-      port: 5432,
-      username: "postgres",
-      password: "5913",
-      database: "nest_document",
-      entities: [SongEntity, UserEntity, ArtistEntity],
-      synchronize: true
-    }),
+    TypeOrmModule.forRoot(dataSourceOption),
     SongsModule,
     ArtistsModule,
     UsersModule,
