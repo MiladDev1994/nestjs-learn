@@ -1,5 +1,6 @@
 import { ArtistEntity } from "src/artists/artists.entity";
-import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
+import { PlaylistEntity } from "src/playlists/playlist.entity";
+import { Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity("songs")
 export class SongEntity {
@@ -24,4 +25,7 @@ export class SongEntity {
     @ManyToMany(() => ArtistEntity, (artist) => artist.songs, {cascade: true}) // از cascade برای ایجاد ارتباط پویا بین جداول استفاده میشه. یعنی به تغییرات حساس میشه و به صورت خودکار اعمال میکنمه
     @JoinTable({name: "songs_artists"})
     artists: ArtistEntity[]
+
+    @ManyToOne(() => PlaylistEntity, (playlist) => playlist.songs)
+    playlists: PlaylistEntity
 }

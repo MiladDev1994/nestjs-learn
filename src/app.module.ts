@@ -13,6 +13,7 @@ import { UserEntity } from './users/users.entity';
 import { ArtistEntity } from './artists/artists.entity';
 import { AuthModule } from './auth/auth.module';
 import { dataSourceOption } from 'db/data-source';
+import { PlaylistModule } from './playlists/playlists.module';
 
 @Module({
   imports: [
@@ -20,7 +21,8 @@ import { dataSourceOption } from 'db/data-source';
     SongsModule,
     ArtistsModule,
     UsersModule,
-    AuthModule
+    AuthModule,
+    PlaylistModule
   ],
   controllers: [AppController],
   providers: [AppService],

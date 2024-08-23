@@ -1,4 +1,5 @@
 import { Exclude } from "class-transformer";
+import { PlaylistEntity } from "src/playlists/playlist.entity";
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 
@@ -30,6 +31,6 @@ export class UserEntity {
     apiKey: string;
 
 
-    // @OneToMany(() => PlayList, (playList) => playList.user)
-    // playLists: PlayList[]
+    @OneToMany(() => PlaylistEntity, (playlist) => playlist.user)
+    playlists: PlaylistEntity[]
 }
