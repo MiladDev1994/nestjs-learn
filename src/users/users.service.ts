@@ -7,6 +7,7 @@ import { UpdateUserDto } from './dto/update_user_dto';
 import { IPaginationOptions, paginate, Pagination } from 'nestjs-typeorm-paginate';
 import * as bcrypt from "bcryptjs"
 import { LoginDTO } from 'src/auth/dto/login.dto';
+import { v4 as uuid4 } from "uuid"
 
 @Injectable()
 export class UsersService {
@@ -17,11 +18,28 @@ export class UsersService {
     ) {}
 
     async create(userDTO: CreateUserDto): Promise<UserEntity> {
+
+        // برای apiKey
+        const user = new UserEntity()
+        user.firstName = userDTO.firstName
+        user.lastName = userDTO.lastName
+        user.email = userDTO.email
+        user.apiKey = uuid4()
+
+
         const salt = await bcrypt.genSalt()
         userDTO.password = await bcrypt.hash(userDTO.password, salt)
-        const user = await this.usersRepository.save(userDTO)
-        delete user.password
-        return user
+        user.password = userDTO.password
+
+        // بعدر از اضافه کردن uuid به این کد تغییر کرد
+        const savedUser = await this.usersRepository.save(user)
+        delete savedUser.password
+        return savedUser
+
+        // اول این بود
+        // const user = await this.usersRepository.save(userDTO)
+        // delete user.password
+        // return user
     }
 
     async findOne(data: LoginDTO): Promise<UserEntity> {
@@ -66,5 +84,9 @@ export class UsersService {
                 twoFASecrete: null
             }
         )
+    }
+
+    async findByApiKey(apiKey: string): Promise<UserEntity> {
+        return this.usersRepository.findOneBy({ apiKey })
     }
 }

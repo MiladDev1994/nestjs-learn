@@ -1,5 +1,5 @@
 import { Exclude } from "class-transformer";
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 
 @Entity("users")
@@ -25,4 +25,11 @@ export class UserEntity {
 
     @Column({ default: false, type: "boolean"})
     enable2FA: boolean;
+
+    @Column()
+    apiKey: string;
+
+
+    // @OneToMany(() => PlayList, (playList) => playList.user)
+    // playLists: PlayList[]
 }

@@ -8,6 +8,7 @@ import { JwtAuthGuard } from './jwt-guard';
 import { Enable2FAType } from './types';
 import { ValidateTokenDTO } from './dto/validate-token.dto';
 import { UpdateResult } from 'typeorm';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('auth')
 export class AuthController {
@@ -63,6 +64,20 @@ export class AuthController {
         request
     ): Promise<UpdateResult> {
         return this.authService.disable2FA(request.user.userId)
+    }
+
+
+    @Get("profile")
+    @UseGuards(AuthGuard("bearer"))
+    getProfile(
+        @Request()
+        request
+    ) {
+        delete request.user.password;
+        return {
+            msg: "authenticated with apiKey",
+            user: request.user
+        }
     }
 
 }
