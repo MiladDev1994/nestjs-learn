@@ -10,6 +10,7 @@ import { JwtService } from '@nestjs/jwt';
 import { ArtistsService } from 'src/artists/artists.service';
 import { Enable2FAType, payloadTypes } from './types';
 import * as speakeasy from "speakeasy"
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
@@ -18,7 +19,8 @@ export class AuthService {
         private userRepository: Repository<UserEntity>,
         private userService: UsersService,
         private jwtService: JwtService,
-        private artistService: ArtistsService
+        private artistService: ArtistsService,
+        private configService: ConfigService
     ) {}
 
     async login(loginDTO: LoginDTO): Promise<{ accessToken: string } | {validate2FA: string, message: string}> {
@@ -45,7 +47,6 @@ export class AuthService {
             return {secrete: user.twoFASecrete};
         }
         const secrete = speakeasy.generateSecret()
-        console.log(secrete);
         user.twoFASecrete = secrete.base32;
         await this.userService.updateSecreteKey(user.id, user.twoFASecrete)
         return {secrete: user.twoFASecrete};
@@ -77,5 +78,9 @@ export class AuthService {
 
     async validateUserByApiKey(apiKey: string): Promise<UserEntity> {
         return this.userService.findByApiKey(apiKey)
+    }
+
+    getEnvVariable() {
+        return this.configService.get<number>("dbName")
     }
 }

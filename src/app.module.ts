@@ -6,19 +6,27 @@ import { LoggerMiddleware } from './common/middleware/logger/logger.middleware';
 import { SongsController } from './songs/songs.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
-import { SongEntity } from './songs/songs.entity';
 import { ArtistsModule } from './artists/artists.module';
 import { UsersModule } from './users/users.module';
-import { UserEntity } from './users/users.entity';
-import { ArtistEntity } from './artists/artists.entity';
 import { AuthModule } from './auth/auth.module';
-import { dataSourceOption } from 'db/data-source';
 import { PlaylistModule } from './playlists/playlists.module';
 import { SeedModule } from './seed/seed.module';
+import { ConfigModule } from '@nestjs/config';
+import configuration from "./config/configuration"
+// import { dataSourceOption } from 'db/data-source';
+import { typeOrmAsyncConfig } from 'db/data-source';
+import { validate } from 'env.validation';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot(dataSourceOption),
+    ConfigModule.forRoot({
+      envFilePath: [".env.development", ".env.production"],
+      isGlobal: true,
+      load: [configuration],
+      validate: validate
+    }),
+    // TypeOrmModule.forRoot(dataSourceOption),
+    TypeOrmModule.forRootAsync(typeOrmAsyncConfig),
     SongsModule,
     ArtistsModule,
     UsersModule,
@@ -33,7 +41,7 @@ import { SeedModule } from './seed/seed.module';
 // برای ویدلویر باید ماژول رو از نست ماژول ایمپلیمنت کنیم
 export class AppModule implements NestModule {
   constructor(private dataSource: DataSource) {
-    console.log(dataSource.driver.database);
+    // console.log(dataSource.driver.database);
   }
   configure(consumer: MiddlewareConsumer) {
     consumer

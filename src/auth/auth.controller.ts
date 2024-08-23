@@ -80,4 +80,9 @@ export class AuthController {
         }
     }
 
+
+    @Get("test")
+    testEnvVariable() {
+        return this.authService.getEnvVariable()
+    }
 }
