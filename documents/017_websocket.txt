@@ -21,27 +21,32 @@
     import { Server } from "socket.io"
 
     @WebSocketGateway({
-    cors: {
-        origin: "*"
-    }
+        cors: {
+            origin: "*"
+        }
     })
     export class EventsGateway implements OnModuleInit {
-    @WebSocketServer()
-    server: Server
+        @WebSocketServer()
+        server: Server
 
-    onModuleInit() {
-        this.server.on("connection", (socket) => {
-        console.log(socket.id);
-        console.log(socket.connected);
-        })
-    }
 
-    @SubscribeMessage('message')
-    handleMessage(
-        @MessageBody()
-        data: any
-    ) {
-        console.log("get from client");
-        console.log(data);
-    }
+
+    همونطوری که مشخصه اینجا ارتباط برقرار میشه
+        onModuleInit() {
+            this.server.on("connection", (socket) => {
+            console.log(socket.id);
+            console.log(socket.connected);
+            })
+        }
+
+    این هم یه لیسنر هستش که البته شایذ امیتر هم باشه
+    نکته جالش اینه وقتی دیتایی به این مسیر ارسال میشه میتونه با استفاده از متد of هر اطلاعاتی که میخوایم رو برگردونه
+        @SubscribeMessage('message')
+        handleMessage(
+            @MessageBody()
+            data: any
+        ) {
+            console.log(data);
+            return of({ event: "message", data})
+        }
     }

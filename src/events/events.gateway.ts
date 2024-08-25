@@ -1,10 +1,13 @@
 import { OnModuleInit } from '@nestjs/common';
-import { MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
+import { MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer, WsResponse } from '@nestjs/websockets';
+import { Observable, of } from 'rxjs';
 import { Server } from "socket.io"
 
 @WebSocketGateway({
   cors: {
-    origin: "*"
+    origin: "http://localhost:3051",
+    methods: ["GET", "POST"],
+    credentials: true
   }
 })
 export class EventsGateway implements OnModuleInit {
@@ -13,17 +16,17 @@ export class EventsGateway implements OnModuleInit {
 
   onModuleInit() {
     this.server.on("connection", (socket) => {
-      console.log(socket.id);
-      console.log(socket.connected);
+      // console.log(socket.id);
+      // console.log(socket.connected);
     })
   }
-
+  
   @SubscribeMessage('message')
   handleMessage(
     @MessageBody()
     data: any
-  ) {
-    console.log("get from client");
+  ): Observable<WsResponse<any>> {
     console.log(data);
+    return of({ event: "message", data})
   }
 }
