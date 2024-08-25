@@ -21,9 +21,9 @@
     import { Server } from "socket.io"
 
     @WebSocketGateway({
-        cors: {
-            origin: "*"
-        }
+        origin: "http://localhost:3051",
+        methods: ["GET", "POST"],
+        credentials: true
     })
     export class EventsGateway implements OnModuleInit {
         @WebSocketServer()
