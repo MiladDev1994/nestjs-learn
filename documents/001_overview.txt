@@ -13,3 +13,23 @@ Service:
     مثل ارتباط با دیتابیس و چیزای دیگه
 
 به صورت خلاصه میشن همون مدل و کنترلر
+
+
+
+برای افزایش سرعت کامپایل از دوتا ابزار جدید استفاده میکنیم
+    npm i -D @swc/cli @swc/core
+
+و فایل nest-cli.json رو به مقدار زیر تغییر میدیم
+    {
+    "$schema": "https://json.schemastore.org/nest-cli",
+    "collection": "@nestjs/schematics",
+    "sourceRoot": "src",
+    "compilerOptions": {
+        "deleteOutDir": true,
+
+        این دوتا اضافه شد
+        "builder": "swc",
+        "typeCheck": true
+    }
+    }
+
