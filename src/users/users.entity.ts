@@ -1,5 +1,5 @@
 import { Exclude } from "class-transformer";
-import { PlaylistEntity } from "src/playlists/playlist.entity";
+import { PlaylistEntity } from "../playlists/playlist.entity";
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 

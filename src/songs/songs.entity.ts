@@ -1,5 +1,5 @@
-import { ArtistEntity } from "src/artists/artists.entity";
-import { PlaylistEntity } from "src/playlists/playlist.entity";
+import { ArtistEntity } from "../artists/artists.entity";
+import { PlaylistEntity } from "../playlists/playlist.entity";
 import { Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity("songs")

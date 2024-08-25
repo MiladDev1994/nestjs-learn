@@ -5,11 +5,12 @@ import { SongEntity } from './songs.entity';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { UpdateSongDto } from './dto/update-song-dto';
 import { Pagination } from 'nestjs-typeorm-paginate';
-import { ArtistsJwtGuard } from 'src/auth/artists_jwt_quard';
+import { ArtistsJwtGuard } from '../auth/artists_jwt_quard';
 
 @Controller({
     path: "songs",
-    scope: Scope.REQUEST 
+    // scope: Scope.REQUEST  // موقع تست ارور میداد بخاطر همین غیر فعالش کردم
+
         // وقتی تو کنتلرل یا سرویس از scopes استفاده کینم یه اتفاق جالب میوفته
         // تمام این کلاس ها سینگلتون هستن و مقادیر رو تو خودشون نگهمیدارن
         // به همین دلیل امنیت رو کاهش میدن چون فقط همین یه دونه کلاس رو داریم و اطلاعات داخلضون میتونه در دسترس همه قرار بگیره
@@ -30,7 +31,7 @@ export class SongsController {
         @Body() createSongDto: CreateSongDto,
         @Request() request,
     ): Promise<SongEntity> {
-        console.log(request.user);
+        // console.log(request.user);
         return this.songsService.create(createSongDto)
     }
 

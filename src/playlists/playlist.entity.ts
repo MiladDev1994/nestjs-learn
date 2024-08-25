@@ -1,5 +1,5 @@
-import { SongEntity } from "src/songs/songs.entity";
-import { UserEntity } from "src/users/users.entity";
+import { SongEntity } from "../songs/songs.entity";
+import { UserEntity } from "../users/users.entity";
 import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 

@@ -10,7 +10,7 @@ export class ArtistsJwtGuard extends AuthGuard("jwt") {
     
     handleRequest<TUser = any>(err: any, user: any, info: any, context: ExecutionContext, status?: any): TUser {
         if (err || !user) throw err || new UnauthorizedException()
-        console.log(user);
+        // console.log(user);
         if (user.artistId) return user
         throw err || new UnauthorizedException() 
     }
