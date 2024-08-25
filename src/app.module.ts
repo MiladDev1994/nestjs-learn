@@ -16,6 +16,7 @@ import configuration from "./config/configuration"
 // import { dataSourceOption } from 'db/data-source';
 import { typeOrmAsyncConfig } from 'db/data-source';
 import { validate } from 'env.validation';
+import { EventsModule } from './events/events.module';
 
 @Module({
   imports: [
@@ -32,7 +33,8 @@ import { validate } from 'env.validation';
     UsersModule,
     AuthModule,
     PlaylistModule,
-    SeedModule
+    SeedModule,
+    EventsModule
   ],
   controllers: [AppController],
   providers: [AppService],

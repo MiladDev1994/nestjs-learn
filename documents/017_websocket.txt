@@ -1,0 +1,47 @@
+نصب ابزار های زیر
+    @nestjs/platform-socket.io
+    @nestjs/websockets
+
+
+
+برای ساخت یک سرور وب سوکت ابتدا یه ماژول میسازیم به همراه کد زیرimport { Module } from '@nestjs/common';
+    import { EventsGateway } from './events.gateway';
+
+    @Module({
+    providers: [EventsGateway]
+    })
+    export class EventsModule {}
+
+
+
+
+حالا نیاز به یه gateway داریم 
+    import { OnModuleInit } from '@nestjs/common';
+    import { MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
+    import { Server } from "socket.io"
+
+    @WebSocketGateway({
+    cors: {
+        origin: "*"
+    }
+    })
+    export class EventsGateway implements OnModuleInit {
+    @WebSocketServer()
+    server: Server
+
+    onModuleInit() {
+        this.server.on("connection", (socket) => {
+        console.log(socket.id);
+        console.log(socket.connected);
+        })
+    }
+
+    @SubscribeMessage('message')
+    handleMessage(
+        @MessageBody()
+        data: any
+    ) {
+        console.log("get from client");
+        console.log(data);
+    }
+    }
