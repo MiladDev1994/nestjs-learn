@@ -17,6 +17,8 @@ import configuration from "./config/configuration"
 import { typeOrmAsyncConfig } from 'db/data-source';
 import { validate } from 'env.validation';
 import { EventsModule } from './events/events.module';
+import { ScheduleModule } from '@nestjs/schedule';
+import { TaskService } from './task/task.service';
 
 @Module({
   imports: [
@@ -28,6 +30,7 @@ import { EventsModule } from './events/events.module';
     }),
     // TypeOrmModule.forRoot(dataSourceOption),
     TypeOrmModule.forRootAsync(typeOrmAsyncConfig),
+    ScheduleModule.forRoot(),
     SongsModule,
     ArtistsModule,
     UsersModule,
@@ -37,7 +40,7 @@ import { EventsModule } from './events/events.module';
     EventsModule
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, TaskService],
 })
 
 // برای ویدلویر باید ماژول رو از نست ماژول ایمپلیمنت کنیم

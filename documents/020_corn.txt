@@ -1,0 +1,29 @@
+یه ابزار خیییلی جالب داریم که بهمون این امکان رو میده که یه سری ار فانکشن ها رو توی یه زمان خاصی اجرا کنیم
+
+نصب ابزارهای زیر
+    npm i --save @nestjs/schedule
+    npm i --save -D @types/cron
+
+اول با د ماژولش رو تو ماژول اصلی ایمپورت کنیم  => app.module.ts
+
+    @Module({
+        imports: [
+            ScheduleModule.forRoot(),
+        ],
+    })
+
+
+
+و باید یه سرویس هم برای کاری که قراره انجام بشه بنویسیم
+    import { Injectable, Logger } from '@nestjs/common';
+    import { Cron } from '@nestjs/schedule';
+
+    @Injectable()
+    export class TaskService {
+        private readonly logger = new Logger(TaskService.name)
+
+        @Cron("1 * * * * *") ("second" "minute" "hour" "day of month" "month" "weekday")
+        myCronTask() {
+            this.logger.debug("10 second")
+        }
+    }
