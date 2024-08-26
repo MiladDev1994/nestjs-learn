@@ -1,0 +1,60 @@
+نصب ابزار مربوطه
+    @types/multer
+
+
+توضیح خاصی نداره . همه چیز به شدت شبیه اکسپرسه
+
+  @Post("upload")
+  @UseInterceptors(FileInterceptor("file", {
+    storage: diskStorage({
+      destination: "./upload/files",
+      filename: (req, file, cb) => {
+        cb(null, file.originalname)
+      }
+    }),
+    limits: {
+      fileSize: 10000000
+    }
+  }))
+  uploadFile(
+    @UploadedFile()
+    file: Express.Multer.File
+  ) {
+    console.log(file);
+    return {
+      data: file,
+      message: "Uploaded"
+    }
+  }
+
+
+  @Post("upload_mp3")
+  @UseInterceptors(FileInterceptor("file", {
+    storage: diskStorage({
+      destination: "./upload/files",
+      filename: (req, file, cb) => {
+        cb(null, file.originalname)
+      }
+    }),
+    limits: {
+      fileSize: 10000000
+    }
+  }))
+  uploadMp3File(
+    @UploadedFile(
+      new ParseFilePipeBuilder()
+        .addFileTypeValidator({
+          fileType: "mpeg"
+        })
+        .build({
+          errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY
+        })
+    )
+    file: Express.Multer.File
+  ) {
+    console.log(file);
+    return {
+      data: file,
+      message: "Uploaded"
+    }
+  }
