@@ -5,6 +5,7 @@ import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/update_user_dto';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { Pagination } from 'nestjs-typeorm-paginate';
+import { UserDecorator } from './users.decorator';
 
 @Controller('users')
 export class UsersController {
@@ -62,5 +63,15 @@ export class UsersController {
         ) id: number
     ): Promise<DeleteResult> {
         return this.userService.delete(id)
+    }
+
+
+    @Get("test_custom_decorator/:id")
+    findOne(
+        @UserDecorator()
+        user: UserEntity
+    ) {
+        console.log(user);
+        return user
     }
 }
