@@ -19,6 +19,7 @@ import { validate } from 'env.validation';
 import { EventsModule } from './events/events.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { TaskService } from './task/task.service';
+import { FileController } from './file/file.controller';
 
 @Module({
   imports: [
@@ -39,7 +40,7 @@ import { TaskService } from './task/task.service';
     SeedModule,
     EventsModule
   ],
-  controllers: [AppController],
+  controllers: [AppController, FileController],
   providers: [AppService, TaskService],
 })
 
