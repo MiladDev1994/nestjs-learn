@@ -1,0 +1,8 @@
+{
+    "discs": [
+        {
+            "name": "database",
+            "mountTo": "db"
+        }
+    ]
+}

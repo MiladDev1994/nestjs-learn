@@ -7,6 +7,6 @@ export class TaskService {
 
     @Cron("* 30 * * * *")
     myCronTask() {
-        this.logger.debug("10 second")
+        // this.logger.debug("10 second")
     }
 }
