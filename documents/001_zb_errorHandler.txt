@@ -1,0 +1,10 @@
+برای هندل کردن ارور ها نمیتونیم مستقیما از throw new Error استفاده کنیم چوم برنامه دان میشه
+
+برای حل این مشکل از ساختار زیر استفاده میکنیم
+    throw new HttpException(
+        {
+            status: HttpStatus.BAD_REQUEST,
+            error: "message",
+        },
+        HttpStatus.BAD_REQUEST,
+    )
