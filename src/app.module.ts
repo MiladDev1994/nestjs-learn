@@ -11,7 +11,7 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { PlaylistModule } from './playlists/playlists.module';
 import { SeedModule } from './seed/seed.module';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import configuration from "./config/configuration"
 // import { dataSourceOption } from 'db/data-source';
 import { typeOrmAsyncConfig } from 'db/data-source';
