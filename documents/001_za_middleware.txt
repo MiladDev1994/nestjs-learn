@@ -1,0 +1,40 @@
+با میدلویر ها که آشنا هستیم
+
+برای استفاده از میدلویر باید یه مسیر برای فایل های میدلویر تعریف کنیم
+ترجیحا از این مسیر استفاده میکنیم
+    src/middleware/....
+
+ما میتونیم با استفاده از cli هم میدلویر رو بسازیم
+با استفاده از دستور
+    nest g mi common/middleware/<name>
+
+محتویات فایل میدلویر خیلی شبیه به اکسپرس هستش
+    import { Injectable, NestMiddleware } from '@nestjs/common';
+    import { NextFunction, Request, Response } from 'express';
+
+
+    @Injectable()
+    export class LoggerMiddleware implements NestMiddleware {
+        use(req: Request, res: Response, next: NextFunction) {
+            // console.log("LoggerMiddleware");
+            next();
+        }
+    }
+
+
+هر شرطی که لازم باشه اینجا قرار میدیم و اگر همه چجی اوکی بود از next استفاده میکنیم
+
+حالا برای استفاده از این میدلویر باید به فایل app.module.ts بشتاسونیمش
+    export class AppModule implements NestModule {
+        constructor(private dataSource: DataSource) {
+            // console.log(dataSource.driver.database);
+        }
+        configure(consumer: MiddlewareConsumer) {
+            consumer
+            .apply(LoggerMiddleware)
+            // .forRoutes("songs") // برای تمام متد های این روت
+            // .forRoutes({path: "songs", method: RequestMethod.POST}) // فقط برای متد پست
+            .forRoutes(SongsController) // فقط برای کنترلر SongsController
+            
+        }
+    }
